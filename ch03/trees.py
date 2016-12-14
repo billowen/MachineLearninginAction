@@ -85,10 +85,25 @@ def createTree(dataSet, labels):
     uniqueVal = set(featVals)
     for value in uniqueVal:
         subLabels = labels[:bestFeature]
-        subLabels.extend(labels[bestFeature+1:])
+        subLabels.extend(labels[bestFeature + 1:])
         myTree[bestFeatureLabel][value] = createTree(
             splitDataSet(dataSet, bestFeature, value), subLabels)
     return myTree
+
+
+
+def classify(inputTree, featLabels, testVec):
+    headStr = list(inputTree)[0]
+    subDict = inputTree[headStr]
+    featIndex = featLabels.index(headStr)
+    for key, value in subDict.items():
+        if testVec[featIndex] == key:
+            if type(value) is dict:
+                classLabel = classify(value, featLabels, testVec)
+            else:
+                classLabel = value
+    return classLabel
+
 
 
 if __name__ == "__main__":
