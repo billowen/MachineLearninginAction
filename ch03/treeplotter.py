@@ -89,7 +89,26 @@ def createPlot(myTree):
     plt.show()
 
 
+def classify(inputTree, featLabels, testVec):
+    headStr = list(inputTree)[0]
+    subDict = inputTree[headStr]
+    print(featLabels)
+    featIndex = featLabels.index(headStr)
+    for key, value in subDict.items():
+        if testVec[featIndex] == key:
+            if type(value) is dict:
+                classLabel = classify(value, featLabels, testVec)
+            else:
+                classLabel = value
+    return classLabel
+
+
 if __name__ == "__main__":
-    myData, labels = trees.createDataSet()
-    myTree = trees.createTree(myData, labels)
-    createPlot(myTree)
+    fr = open('lenses.txt')
+    lenses = [inst.strip().split('\t') for inst in fr.readlines()]
+    lensesLabels = ['age', 'prescript', 'astigmatic', 'tearRate']
+    print(lensesLabels)
+    lensesTree = trees.createTree(lenses, lensesLabels)
+    print(lensesLabels)
+    createPlot(lensesTree)
+    print(classify(lensesTree, lensesLabels, lenses[0]))

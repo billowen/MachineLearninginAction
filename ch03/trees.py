@@ -81,11 +81,11 @@ def createTree(dataSet, labels):
     bestFeature = chooseBestFeatureToSplit(dataSet)
     bestFeatureLabel = labels[bestFeature]
     myTree = {bestFeatureLabel: {}}
-    del(labels[bestFeature])
     featVals = [example[bestFeature] for example in dataSet]
     uniqueVal = set(featVals)
     for value in uniqueVal:
-        subLabels = labels[:]
+        subLabels = labels[:bestFeature]
+        subLabels.extend(labels[bestFeature+1:])
         myTree[bestFeatureLabel][value] = createTree(
             splitDataSet(dataSet, bestFeature, value), subLabels)
     return myTree
